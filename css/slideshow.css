@@ -1,0 +1,621 @@
+/* ============================================================
+   STREAMMAX IPTV — SLIDESHOW ANIMATIONS CSS
+   Hero Slideshow + Bottom Showcase Slideshow
+   ============================================================ */
+
+/* ══════════════════════════════════════════════════════════
+   1. HERO SLIDESHOW (fundo do cabeçalho)
+   ══════════════════════════════════════════════════════════ */
+
+.hero-slideshow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* ── Cada slide ── */
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+}
+
+.hero-slide.active {
+  opacity: 1;
+}
+
+.hero-slide.exiting {
+  opacity: 0;
+}
+
+/* ── Imagem de fundo com Ken Burns ── */
+.hs-img {
+  position: absolute;
+  inset: -5%;           /* margem extra para o zoom não vazar */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: kenburnsCycle 8s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+/* ── Ken Burns: alterna zoom-in e zoom-out por slide ── */
+.hero-slide:nth-child(1)  .hs-img { animation-name: kenburnsIn;  }
+.hero-slide:nth-child(2)  .hs-img { animation-name: kenburnsOut; animation-delay: 0s; }
+.hero-slide:nth-child(3)  .hs-img { animation-name: kenburnsLeft; }
+.hero-slide:nth-child(4)  .hs-img { animation-name: kenburnsIn;  }
+.hero-slide:nth-child(5)  .hs-img { animation-name: kenburnsRight; }
+.hero-slide:nth-child(6)  .hs-img { animation-name: kenburnsOut; }
+
+@keyframes kenburnsIn {
+  0%   { transform: scale(1.00) translate(0, 0); }
+  100% { transform: scale(1.12) translate(-1%, -1%); }
+}
+
+@keyframes kenburnsOut {
+  0%   { transform: scale(1.12) translate(0, 0); }
+  100% { transform: scale(1.00) translate(1%, 1%); }
+}
+
+@keyframes kenburnsLeft {
+  0%   { transform: scale(1.08) translate(2%, 0); }
+  100% { transform: scale(1.00) translate(-2%, 0); }
+}
+
+@keyframes kenburnsRight {
+  0%   { transform: scale(1.00) translate(-2%, 0); }
+  100% { transform: scale(1.10) translate(2%, 0.5%); }
+}
+
+/* ── Overlay multicamadas sobre o slideshow ── */
+.hs-overlay {
+  position: absolute;
+  inset: 0;
+  /* Camada escura base + gradiente direcional para o conteúdo */
+  background:
+    linear-gradient(
+      to right,
+      rgba(10, 10, 15, 0.92) 0%,
+      rgba(10, 10, 15, 0.65) 50%,
+      rgba(10, 10, 15, 0.25) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(10, 10, 15, 0.6) 0%,
+      transparent 40%,
+      transparent 60%,
+      rgba(10, 10, 15, 0.85) 100%
+    );
+  z-index: 1;
+}
+
+/* ── Indicador "NOW PLAYING" ── */
+.hs-now-playing {
+  position: absolute;
+  bottom: 80px;
+  right: 32px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(10, 10, 15, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  border-radius: 50px;
+  padding: 8px 18px 8px 12px;
+  animation: fadeInRight 0.5s ease;
+}
+
+.hs-np-dot {
+  width: 8px;
+  height: 8px;
+  background: #ef4444;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: pulse 1.5s infinite;
+}
+
+.hs-np-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  transition: opacity 0.4s ease;
+}
+
+.hs-np-cat {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.5);
+  padding-left: 8px;
+  border-left: 1px solid rgba(255,255,255,0.15);
+  white-space: nowrap;
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Bolinhas de navegação do hero ── */
+.hs-dots {
+  position: absolute;
+  bottom: 32px;
+  right: 32px;
+  z-index: 5;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.hs-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  border: none;
+  cursor: pointer;
+  transition: all 0.35s ease;
+  padding: 0;
+}
+
+.hs-dot.active {
+  background: #7c3aed;
+  width: 24px;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(124,58,237,0.6);
+}
+
+.hs-dot:hover:not(.active) {
+  background: rgba(255,255,255,0.6);
+}
+
+/* ── Barra de progresso do hero ── */
+.hs-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255,255,255,0.1);
+  z-index: 5;
+}
+
+.hs-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #7c3aed, #ec4899);
+  border-radius: 0 2px 2px 0;
+  transition: width linear;
+}
+
+/* ── Garante que o conteúdo do hero fique acima do slideshow ── */
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-content,
+.floating-cards {
+  position: relative;
+  z-index: 2;
+}
+
+/* Mockup TV — posicionamento absoluto, não conflita com hero-content */
+.hero-mockup {
+  z-index: 2;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   2. BOTTOM SHOWCASE SLIDESHOW
+   ══════════════════════════════════════════════════════════ */
+
+.bottom-showcase {
+  background: var(--dark);
+  padding: 100px 0 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Glow de fundo decorativo */
+.bottom-showcase::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 60%, rgba(124,58,237,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 80% 30%, rgba(236,72,153,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ── Cabeçalho da seção ── */
+.bss-header {
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  padding: 0 24px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.bss-title-group h2 {
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 12px 0 10px;
+}
+
+.bss-title-group p {
+  color: var(--text-muted);
+  font-size: 1rem;
+  max-width: 520px;
+}
+
+/* ── Botões de controle ── */
+.bss-controls {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.bss-ctrl-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(124,58,237,0.12);
+  border: 1px solid rgba(124,58,237,0.3);
+  color: var(--primary-light);
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.bss-ctrl-btn:hover {
+  background: rgba(124,58,237,0.25);
+  border-color: var(--primary);
+  transform: scale(1.08);
+}
+
+.bss-ctrl-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Track wrapper (viewport) ── */
+.bss-track-wrapper {
+  overflow: hidden;
+  position: relative;
+  padding-bottom: 4px;         /* espaço para sombra dos cards */
+}
+
+/* ── Track (faixa deslizante) ── */
+.bss-track {
+  display: flex;
+  gap: 20px;
+  padding: 0 24px 0 calc((100vw - 1200px) / 2 + 24px);
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+/* ── Cards individuais ── */
+.bss-card {
+  position: relative;
+  flex: 0 0 320px;
+  height: 420px;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.4s ease;
+}
+
+.bss-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(124,58,237,0.4);
+}
+
+/* Card largo (destaque) */
+.bss-card-wide {
+  flex: 0 0 480px;
+}
+
+/* ── Imagem de fundo do card ── */
+.bss-card-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s ease;
+}
+
+.bss-card:hover .bss-card-img {
+  transform: scale(1.08);
+}
+
+/* ── Overlay do card ── */
+.bss-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.05) 0%,
+    rgba(0,0,0,0.15) 40%,
+    rgba(0,0,0,0.85) 75%,
+    rgba(0,0,0,0.95) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  transition: background 0.3s ease;
+}
+
+.bss-card:hover .bss-card-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.1) 0%,
+    rgba(0,0,0,0.2) 40%,
+    rgba(0,0,0,0.9) 70%,
+    rgba(10,10,15,0.98) 100%
+  );
+}
+
+/* ── Badge do card (AO VIVO, 4K, NOVO, CLÁSSICO) ── */
+.bss-card-badge {
+  align-self: flex-start;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.bss-card-badge.live {
+  background: rgba(239,68,68,0.85);
+  color: #fff;
+  animation: pulseBadge 2s infinite;
+}
+
+.bss-card-badge.live i {
+  font-size: 0.5rem;
+  animation: pulse 1.2s infinite;
+}
+
+.bss-card-badge.hd {
+  background: rgba(124,58,237,0.85);
+  color: #fff;
+}
+
+.bss-card-badge.new {
+  background: rgba(16,185,129,0.85);
+  color: #fff;
+}
+
+.bss-card-badge.classic {
+  background: rgba(245,158,11,0.85);
+  color: #fff;
+}
+
+@keyframes pulseBadge {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.4); }
+  50%       { box-shadow: 0 0 0 6px rgba(239,68,68,0); }
+}
+
+/* ── Info do card ── */
+.bss-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bss-card-cat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bss-card-cat i { color: var(--primary-light); font-size: 0.75rem; }
+
+.bss-card-info h4 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.25;
+  margin: 0;
+  /* Aparece ao hover */
+  transform: translateY(4px);
+  transition: transform 0.35s ease;
+}
+
+.bss-card:hover .bss-card-info h4 {
+  transform: translateY(0);
+}
+
+.bss-card-info p {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.4;
+  margin: 0;
+  /* Aparece ao hover */
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.35s ease 0.05s, transform 0.35s ease 0.05s;
+}
+
+.bss-card:hover .bss-card-info p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Shimmer de brilho no hover do card */
+.bss-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.04) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bss-card:hover::after { opacity: 1; }
+
+/* ── Dots de posição do bottom slideshow ── */
+.bss-dots-row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 36px;
+  padding: 0 24px;
+}
+
+.bss-indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  transition: all 0.35s ease;
+  cursor: pointer;
+}
+
+.bss-indicator-dot.active {
+  background: var(--primary);
+  width: 28px;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(124,58,237,0.5);
+}
+
+/* ── CTA dentro da seção showcase ── */
+.bss-cta {
+  margin-top: 60px;
+  background: linear-gradient(135deg,
+    rgba(124,58,237,0.12) 0%,
+    rgba(236,72,153,0.08) 100%
+  );
+  border-top: 1px solid rgba(124,58,237,0.2);
+  border-bottom: 1px solid rgba(124,58,237,0.1);
+  padding: 32px 24px;
+}
+
+.bss-cta-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.bss-cta-icon {
+  width: 52px;
+  height: 52px;
+  background: var(--gradient);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 8px 20px rgba(124,58,237,0.4);
+  animation: iconPulse 3s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% { box-shadow: 0 8px 20px rgba(124,58,237,0.4); transform: scale(1); }
+  50%       { box-shadow: 0 8px 30px rgba(124,58,237,0.7); transform: scale(1.05); }
+}
+
+.bss-cta-text {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bss-cta-text strong {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.bss-cta-text span {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* ══════════════════════════════════════════════════════════
+   3. TRANSIÇÕES DE SLIDE — animação de label
+   ══════════════════════════════════════════════════════════ */
+
+.hs-np-label.changing,
+.hs-np-cat.changing {
+  animation: labelFade 0.4s ease;
+}
+
+@keyframes labelFade {
+  0%   { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════════════════════
+   4. RESPONSIVIDADE
+   ══════════════════════════════════════════════════════════ */
+
+@media (max-width: 1200px) {
+  .bss-track {
+    padding-left: 24px;
+  }
+}
+
+@media (max-width: 900px) {
+  .bss-card        { flex: 0 0 260px; height: 340px; }
+  .bss-card-wide   { flex: 0 0 340px; }
+
+  .hs-now-playing  { display: none; }
+  .hs-dots         { right: 16px; bottom: 24px; }
+
+  .bss-header      { align-items: flex-start; }
+  .bss-controls    { align-self: center; }
+
+  .bss-cta-inner   { flex-direction: column; align-items: flex-start; }
+  .bss-cta-inner .btn { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 600px) {
+  .bss-card        { flex: 0 0 220px; height: 300px; }
+  .bss-card-wide   { flex: 0 0 280px; }
+
+  .bss-header      { flex-direction: column; gap: 16px; }
+  .bss-controls    { align-self: flex-end; }
+
+  .bottom-showcase { padding-top: 60px; }
+
+  .bss-cta         { padding: 24px 16px; }
+}
